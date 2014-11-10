@@ -1,25 +1,70 @@
+String.prototype.insertAt=function(index, string) {
+  return this.substr(0, index) + string + this.substr(index);
+}
+
 $("document").ready( function() {
 
 	$(".colonne").each( function(i) {
 
 		var $this = $(this);
 
+				// ajouter bouton edit
+		$this.prepend( '<div class="edit"><img src="./img/edit.png" class="" width="32" height="32" /></div>');
+
 		var indexCouleur = $this.html().indexOf("couleur : ");
+		var thisCouleur = "#eee";
 
-		thisCouleur = $this.html().substring( indexCouleur );
-
-		thisCouleur = thisCouleur.substring( 10, thisCouleur.indexOf("<"));
+		if( indexCouleur > 0 ) {
+			thisCouleur = $this.html().substring( indexCouleur );
+			thisCouleur = thisCouleur.substring( 10, thisCouleur.indexOf("<") );
+		}
 
 		console.log( "couleur : " +  thisCouleur );
 
 		$this.css("borderColor", thisCouleur );
 
-		// ajouter bouton edit
-		$this.prepend( '<div class="edit"><img src="./img/edit.png" class="" width="32" height="32" /></div>');
 		$this.find(".edit").css("backgroundColor", thisCouleur );
 
 		// liens en couleur du projet
 		$this.find("a").css("color", thisCouleur );
+
+		var indexEquipe = $this.html().indexOf("équipe : ");
+		if( indexEquipe >= 0 ) {
+			thisEquipe = $this.html().substring( indexEquipe );
+			thisEquipe = thisEquipe.substring( 9, thisEquipe.indexOf("<") );
+			console.log( "equipe : " +  thisEquipe );
+
+			$this.data("team", thisEquipe );
+
+		}
+
+		// code-folding
+		function makeCodeFold( thisColonne, thisHtml ) {
+/*
+			var indexBeginCodeFold = thisHtml.indexOf("<p>{</p>");
+			var indexEndCodeFold = thisHtml.indexOf("<p>}</p>");
+		  var codeFoldContent = thisHtml.substring( indexBeginCodeFold, indexEndCodeFold );
+			codeFoldContent = "<div>" + codeFoldContent + "</div>";
+*/
+
+ 			while ( thisColonne.html().indexOf("<p>{</p>") >= 0 ) {
+
+				var indexBeginCodeFold = thisHtml.indexOf("<p>{</p>");
+
+				thisColonne.html( thisHtml.replace( "<p>{</p>", "" ).insertAt( indexBeginCodeFold, "<div class='textFold is-folded'>") );
+
+				// updter thisHtml
+				thisHtml = thisColonne.html();
+
+				thisColonne.html( thisHtml.insertAt( thisHtml.indexOf("<p>}</p>") + 8, "</div>").replace( "<p>}</p>", "" ) );
+
+			}
+		}
+
+		if ( i == 0 ) {
+			makeCodeFold( $this, $this.html() );
+		}
+
 
 		// masquer paramètres
 		$this.find("p").each(function() {
@@ -37,8 +82,11 @@ $("document").ready( function() {
 
 		$this.find("h1").click( function() {
 			$this.toggleClass("is-larger");
-
 		});
+		$this.find(".textFold *:first-child").on("click",function() {
+			$(this).parent(".textFold").toggleClass("is-folded");
+		});
+
 
 	});
 
