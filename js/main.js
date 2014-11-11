@@ -29,12 +29,15 @@ $("document").ready( function() {
 		$this.find("a").css("color", thisCouleur );
 
 		var indexEquipe = $this.html().indexOf("équipe : ");
+
 		if( indexEquipe >= 0 ) {
+
 			thisEquipe = $this.html().substring( indexEquipe );
 			thisEquipe = thisEquipe.substring( 9, thisEquipe.indexOf("<") );
 			console.log( "equipe : " +  thisEquipe );
 
-			$this.data("team", thisEquipe );
+			$this.attr("data-team", thisEquipe );
+			$this.css("borderColor", thisCouleur );
 
 		}
 
@@ -59,11 +62,12 @@ $("document").ready( function() {
 				thisColonne.html( thisHtml.insertAt( thisHtml.indexOf("<p>}</p>") + 8, "</div>").replace( "<p>}</p>", "" ) );
 
 			}
+
+			thisColonne.find(".textFold").css("borderColor", thisCouleur );
+
 		}
 
-		if ( i == 0 ) {
-			makeCodeFold( $this, $this.html() );
-		}
+		makeCodeFold( $this, $this.html() );
 
 
 		// masquer paramètres
