@@ -4,6 +4,9 @@ String.prototype.insertAt=function(index, string) {
 
 $("document").ready( function() {
 
+	window.addEventListener("message", function(event) {
+		console.log("windowMessage");
+	});
 	$(".colonne").each( function(i) {
 
 		var $this = $(this);
@@ -25,7 +28,10 @@ $("document").ready( function() {
 
 		$this.find(".edit").css("backgroundColor", thisCouleur );
 
-		// liens en couleur du projet
+		/*****************************************************
+			lien en couleur, team name
+		******************************************************/
+
 		$this.find("a").css("color", thisCouleur );
 
 		var indexEquipe = $this.html().indexOf("équipe : ");
@@ -41,36 +47,43 @@ $("document").ready( function() {
 
 		}
 
-		// code-folding
+		/*****************************************************
+			changer l'ordre
+		******************************************************/
+
+		var indexOrdre = $this.html().indexOf("ordre : ");
+
+		if( indexOrdre >= 0 ) {
+
+			thisOrdre = $this.html().substring( indexOrdre );
+			thisOrdre = thisOrdre.substring( 8, thisOrdre.indexOf("<") );
+			console.log( "ordre : " +  thisOrdre );
+
+			$this.css("order", thisOrdre );
+
+		}
+
+
+		/*****************************************************
+			code-folding
+		******************************************************/
+
 		function makeCodeFold( thisColonne, thisHtml ) {
-/*
-			var indexBeginCodeFold = thisHtml.indexOf("<p>{</p>");
-			var indexEndCodeFold = thisHtml.indexOf("<p>}</p>");
-		  var codeFoldContent = thisHtml.substring( indexBeginCodeFold, indexEndCodeFold );
-			codeFoldContent = "<div>" + codeFoldContent + "</div>";
-*/
-
  			while ( thisColonne.html().indexOf("<p>{</p>") >= 0 ) {
-
 				var indexBeginCodeFold = thisHtml.indexOf("<p>{</p>");
-
 				thisColonne.html( thisHtml.replace( "<p>{</p>", "" ).insertAt( indexBeginCodeFold, "<div class='textFold is-folded'>") );
-
-				// updter thisHtml
 				thisHtml = thisColonne.html();
-
 				thisColonne.html( thisHtml.insertAt( thisHtml.indexOf("<p>}</p>") + 8, "</div>").replace( "<p>}</p>", "" ) );
-
 			}
-
 			thisColonne.find(".textFold").css("borderColor", thisCouleur );
-
 		}
 
 		makeCodeFold( $this, $this.html() );
 
+		/*****************************************************
+			masquer les-dits paramètres
+		******************************************************/
 
-		// masquer paramètres
 		$this.find("p").each(function() {
 			var parameters = $(this).find("i");
 			if ( parameters.length > 0 ) {
@@ -82,7 +95,7 @@ $("document").ready( function() {
 
 		setTimeout( function() {
 			$this.removeClass("is-hidden");
-		}, i*150);
+		}, 100);
 
 		$this.find("h1").click( function() {
 			$this.toggleClass("is-larger");
@@ -91,12 +104,14 @@ $("document").ready( function() {
 			$(this).parent(".textFold").toggleClass("is-folded");
 		});
 
+		console.log("-----");
 
 	});
 
 
-
-
+	$(".tooltip .button").on("click", function(e) {
+		$(".tooltip").toggleClass("is-closed");
+	});
 
 
 
@@ -110,7 +125,7 @@ $("document").ready( function() {
 
 			var thisScript = $this.find("script").eq(0).attr("src").substring( 27, $this.find("script").eq(0).attr("src").indexOf(".js") );
 
-			$this.html('<iframe id="hackpad-' + thisScript + '" src="https://socmed.hackpad.com/ep/api/embed-pad?padId=' + thisScript + '" style="border:0px;width:100%;height:100%;"></iframe>');
+			$this.find(".edit").after('<iframe id="hackpad-' + thisScript + '" src="https://socmed.hackpad.com/ep/api/embed-pad?padId=' + thisScript + '" style="border:0px;width:100%;height:100%;"></iframe>');
 
 			$this.addClass( "is-editable" );
 
@@ -135,11 +150,14 @@ $("document").ready( function() {
 
 /*
 				var thisScript = $this.find("iframe").eq(0).attr("id").substring( 8 );
+				console.log("thisScript : " + thisScript );
 
-				$this.html('<iframe><script src="https://socmed.hackpad.com/' + thisScript + '.js?format=html"></script><noscript><div>View <a href="https://hackpad.com/' + thisScript + '">Untitled</a> on Hackpad.</div></noscript></iframe>');
-
-				$this.removeClass( "is-editable" );
+				$this.html('<iframe src="https://socmed.hackpad.com/' + thisScript + '.js?format=html" sandbox="allow-same-origin allow-scripts"><div></div></iframe>');
 */
+
+//				$this.removeClass( "is-editable" );
+
+			window.location.reload();
 
 		}
 		});
