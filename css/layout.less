@@ -117,6 +117,8 @@ img {
 
 
 	.flexbox & {
+		display: -moz-flex;
+		display: -webkit-flex;
 		display: flex;
 	}
 
@@ -150,7 +152,11 @@ img {
 		transition: max-width .7s ease-in-out, opacity .2s .2s ease-out, transform .4s ease-out;
 
 		.flexbox & {
+			-webkit-flex: 1;
+			-moz-flex: 1;
 			flex: 1;
+			-webkit-order:1000;
+			-moz-order:1000;
 			order:1000;
 		}
 

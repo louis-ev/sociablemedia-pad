@@ -59,6 +59,8 @@ $("document").ready( function() {
 			thisOrdre = thisOrdre.substring( 8, thisOrdre.indexOf("<") );
 			console.log( "ordre : " +  thisOrdre );
 
+			$this.css("-webkit-order", thisOrdre );
+			$this.css("-moz-order", thisOrdre );
 			$this.css("order", thisOrdre );
 
 		}
@@ -69,13 +71,16 @@ $("document").ready( function() {
 		******************************************************/
 
 		function makeCodeFold( thisColonne, thisHtml ) {
- 			while ( thisColonne.html().indexOf("<p>{</p>") >= 0 ) {
-				var indexBeginCodeFold = thisHtml.indexOf("<p>{</p>");
-				thisColonne.html( thisHtml.replace( "<p>{</p>", "" ).insertAt( indexBeginCodeFold, "<div class='textFold is-folded'>") );
-				thisHtml = thisColonne.html();
-				thisColonne.html( thisHtml.insertAt( thisHtml.indexOf("<p>}</p>") + 8, "</div>").replace( "<p>}</p>", "" ) );
-			}
+
+			thisColonne.html(function(index,html){
+			    return html.replace(/<p>{<\/p>/g, "<div class='textFold is-folded'>");
+			});
+			thisColonne.html(function(index,html){
+			    return html.replace(/<p>}<\/p>/g, "</div>");
+			});
+
 			thisColonne.find(".textFold").css("borderColor", thisCouleur );
+
 		}
 
 		makeCodeFold( $this, $this.html() );
