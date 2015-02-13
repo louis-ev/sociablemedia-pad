@@ -2,11 +2,28 @@ String.prototype.insertAt=function(index, string) {
   return this.substr(0, index) + string + this.substr(index);
 }
 
+function getUrlParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
 $("document").ready( function() {
 
 	window.addEventListener("message", function(event) {
 		console.log("windowMessage");
 	});
+
+	var teamMember = getUrlParameter('team');
+
 	$(".colonne").each( function(i) {
 
 		var $this = $(this);
@@ -98,9 +115,26 @@ $("document").ready( function() {
 			}
 		});
 
-		setTimeout( function() {
-			$this.removeClass("is-hidden");
-		}, 100);
+		/*****************************************************
+			URL : membres d'équipe
+		******************************************************/
+
+
+		if ( teamMember !== '' && teamMember !== undefined ) {
+			if ( indexEquipe >= 0 ) {
+				var members = $this.attr("data-team").split(',');
+		    for (var i = 0; i < members.length; i++) {
+					if( members[i].trim().toLowerCase() === teamMember.toLowerCase() ) {
+						$this.removeClass("is-hidden");
+					}
+				}
+			}
+		} else {
+			setTimeout( function() {
+				$this.removeClass("is-hidden");
+			}, 100);
+		}
+
 
 		$this.find("h1").click( function() {
 			$this.toggleClass("is-larger");
@@ -112,6 +146,18 @@ $("document").ready( function() {
 		console.log("-----");
 
 	});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	$(".tooltip .button").on("click", function(e) {
@@ -128,15 +174,17 @@ $("document").ready( function() {
 
 		if ( !$this.hasClass("is-editable") ) {
 
-			var thisScript = $this.find("script").eq(0).attr("src").substring( 27, $this.find("script").eq(0).attr("src").indexOf(".js") );
+			var thisScript = $this.find("script").eq(0).attr("src").substring( 28, $this.find("script").eq(0).attr("src").indexOf(".js") );
 
-			$this.find(".edit").after('<iframe id="hackpad-' + thisScript + '" src="https://socmed.hackpad.com/ep/api/embed-pad?padId=' + thisScript + '" style="border:0px;width:100%;height:100%;"></iframe>');
+			$thisEdit = $this.find(".edit");
+			$thisEdit.nextAll().remove()
+			$thisEdit.after('<iframe id="hackpad-' + thisScript + '" src="https://socmed2.hackpad.com/ep/api/embed-pad?padId=' + thisScript + '" style="border:0px;width:100%;height:100%;"></iframe>');
 
 			$this.addClass( "is-editable" );
 
 			window.addEventListener("message", function(event) {
 				console.log(event);
-				if (event.origin == "https://socmed.hackpad.com") {
+				if (event.origin == "https://socmed2.hackpad.com") {
 					var args = event.data.split(":");
 					if (args.length < 3 || args[0] != "hackpad-" + thisScript || args[1] != "height") {
 						return;
@@ -157,7 +205,7 @@ $("document").ready( function() {
 				var thisScript = $this.find("iframe").eq(0).attr("id").substring( 8 );
 				console.log("thisScript : " + thisScript );
 
-				$this.html('<iframe src="https://socmed.hackpad.com/' + thisScript + '.js?format=html" sandbox="allow-same-origin allow-scripts"><div></div></iframe>');
+				$this.html('<iframe src="https://socmed2.hackpad.com/' + thisScript + '.js?format=html" sandbox="allow-same-origin allow-scripts"><div></div></iframe>');
 */
 
 //				$this.removeClass( "is-editable" );
