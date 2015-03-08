@@ -1,6 +1,8 @@
 
 <?php include ("head.php"); ?>
-
+<script type="text/javascript">
+var workspaceLocation = "https://socmed2.hackpad.com";
+</script>
 	<body>
 
 		<div class="lienHackpad">

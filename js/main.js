@@ -31,15 +31,17 @@ $("document").ready( function() {
 				// ajouter bouton edit
 		$this.prepend( '<div class="edit"><img src="./img/edit.png" class="" width="32" height="32" /></div>');
 
-		var indexCouleur = $this.html().indexOf("couleur : ");
+		var indexCouleur = $this.text().indexOf("<couleur=");
 		var thisCouleur = "#eee";
+		console.log( "indexCouleur : " +  indexCouleur );
 
-		if( indexCouleur > 0 ) {
-			thisCouleur = $this.html().substring( indexCouleur );
-			thisCouleur = thisCouleur.substring( 10, thisCouleur.indexOf("<") );
+		if( indexCouleur >= 0 ) {
+			thisCouleur = $this.text().substring( indexCouleur );
+			console.log( "thisCouleur : " +  thisCouleur );
+			thisCouleur = "#" + thisCouleur.substring( 9, thisCouleur.indexOf(">") );
+			console.log( "thisCouleur : " +  thisCouleur );
 		}
 
-		console.log( "couleur : " +  thisCouleur );
 
 		$this.css("borderColor", thisCouleur );
 
@@ -51,13 +53,12 @@ $("document").ready( function() {
 
 		$this.find("a").css("color", thisCouleur );
 
-		var indexEquipe = $this.html().indexOf("équipe : ");
+		var indexEquipe = $this.text().indexOf("<équipe=");
 
 		if( indexEquipe >= 0 ) {
-
-			thisEquipe = $this.html().substring( indexEquipe );
-			thisEquipe = thisEquipe.substring( 9, thisEquipe.indexOf("<") );
-			console.log( "equipe : " +  thisEquipe );
+			thisEquipe = $this.text().substring( indexEquipe );
+			thisEquipe = thisEquipe.substring( 8, thisEquipe.indexOf(">") );
+			console.log( "thisEquipe : " +  thisEquipe );
 
 			$this.attr("data-team", thisEquipe );
 			$this.css("borderColor", thisCouleur );
@@ -68,13 +69,12 @@ $("document").ready( function() {
 			changer l'ordre
 		******************************************************/
 
-		var indexOrdre = $this.html().indexOf("ordre : ");
+		var indexOrdre = $this.text().indexOf("<ordre=");
 
 		if( indexOrdre >= 0 ) {
-
-			thisOrdre = $this.html().substring( indexOrdre );
-			thisOrdre = thisOrdre.substring( 8, thisOrdre.indexOf("<") );
-			console.log( "ordre : " +  thisOrdre );
+			thisOrdre = $this.text().substring( indexOrdre );
+			thisOrdre = thisOrdre.substring( 7, thisOrdre.indexOf(">") );
+			console.log( "thisOrdre : " +  thisOrdre );
 
 			$this.css("-webkit-order", thisOrdre );
 			$this.css("-moz-order", thisOrdre );
@@ -174,23 +174,25 @@ $("document").ready( function() {
 
 		if ( !$this.hasClass("is-editable") ) {
 
-			var thisScript = $this.find("script").eq(0).attr("src").substring( 28, $this.find("script").eq(0).attr("src").indexOf(".js") );
+			var thisScriptSrc = $this.find("script").eq(0).attr("src");
+
+			var thisScriptID = thisScriptSrc.substring( thisScriptSrc.lastIndexOf("\/") + 1, thisScriptSrc.indexOf(".js") );
 
 			$thisEdit = $this.find(".edit");
 			$thisEdit.nextAll().remove()
-			$thisEdit.after('<iframe id="hackpad-' + thisScript + '" src="https://socmed2.hackpad.com/ep/api/embed-pad?padId=' + thisScript + '" style="border:0px;width:100%;height:100%;"></iframe>');
+			$thisEdit.after('<iframe id="hackpad-' + thisScriptID + '" src="' + workspaceLocation + '/ep/api/embed-pad?padId=' + thisScriptID + '" style="border:0px;width:100%;height:100%;"></iframe>');
 
 			$this.addClass( "is-editable" );
 
 			window.addEventListener("message", function(event) {
 				console.log(event);
-				if (event.origin == "https://socmed2.hackpad.com") {
+				if (event.origin == workspaceLocation) {
 					var args = event.data.split(":");
-					if (args.length < 3 || args[0] != "hackpad-" + thisScript || args[1] != "height") {
+					if (args.length < 3 || args[0] != "hackpad-" + thisScriptID || args[1] != "height") {
 						return;
 					}
 					var height = Number(args[2]) + 60; // 60 is non-ace elements offset
-					var hp = document.getElementById("hackpad-" + thisScript );
+					var hp = document.getElementById("hackpad-" + thisScriptID );
 					if (hp && height > 420) {
 						hp.style.height = height + "px";
 					}
