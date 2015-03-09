@@ -177,6 +177,7 @@ $("document").ready( function() {
 			var thisScriptSrc = $this.find("script").eq(0).attr("src");
 
 			var thisScriptID = thisScriptSrc.substring( thisScriptSrc.lastIndexOf("\/") + 1, thisScriptSrc.indexOf(".js") );
+			var workspaceLocation = thisScriptSrc.substring( 0, thisScriptSrc.lastIndexOf("\/") );
 
 			$thisEdit = $this.find(".edit");
 			$thisEdit.nextAll().remove()
