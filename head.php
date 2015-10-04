@@ -17,11 +17,11 @@
 
   <link rel="stylesheet/less" href="css/layout.less">
 	<script>less = { env: "development" };</script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.6.3/less.min.js" type="text/javascript"></script>
+	<script src="js/vendor/less.min.js" type="text/javascript"></script>
 
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Source+Sans+Pro:Bold' rel='stylesheet' type='text/css'>
 
-  <script src="/js/vendor/modernizr.min.js"></script>
+  <script src="js/vendor/modernizr.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 </head>

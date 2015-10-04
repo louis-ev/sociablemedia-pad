@@ -37,7 +37,7 @@ $("document").ready( function() {
 
 		if( indexCouleur >= 0 ) {
 			thisCouleur = $this.text().substring( indexCouleur );
-			console.log( "thisCouleur : " +  thisCouleur );
+			//console.log( "thisCouleur : " +  thisCouleur );
 			thisCouleur = "#" + thisCouleur.substring( 9, thisCouleur.indexOf(">") );
 			console.log( "thisCouleur : " +  thisCouleur );
 		}
@@ -148,24 +148,27 @@ $("document").ready( function() {
 	});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 	$(".tooltip .button").on("click", function(e) {
 		$(".tooltip").toggleClass("is-closed");
 	});
 
+/*
+	$('body').scrollTo(
+		$(".tableau-cont[data-wwhww=what]"),
+		{ offset: { top: -$("#viewport").height()/2 + 300, left: -$("#viewport").width()/2 + 400} },
+		{ easing: 'easeInOutQuint' }
+	);
+*/
 
+	$("body").wrapInner( "<div id='colonneViewport'></div>" );
+	$('#colonneViewport').find(".colonneContainer").addClass("dragger");
+	//$(".colonneContainer").find(".colonne").addClass("dragger");
+	$(".colonne").wrapInner( "<div class='colonneContent dragger'></div>" );
 
+	$('.colonne').dragscrollable({
+		dragSelector: '.dragger',
+		acceptPropagatedEvent: false
+	});
 
 	$(".colonne .edit").on("click", function(e) {
 
@@ -186,7 +189,7 @@ $("document").ready( function() {
 			$this.addClass( "is-editable" );
 
 			window.addEventListener("message", function(event) {
-				console.log(event);
+				//console.log(event);
 				if (event.origin == workspaceLocation) {
 					var args = event.data.split(":");
 					if (args.length < 3 || args[0] != "hackpad-" + thisScriptID || args[1] != "height") {
